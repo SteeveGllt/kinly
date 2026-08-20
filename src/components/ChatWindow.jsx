@@ -1,27 +1,24 @@
 import MessageInput from "./MessageInput.jsx";
-import {useState} from "react";
+import Message from "./Message.jsx";
 
-export default function ChatWindow() {
-    const [messages, setMessages] = useState([]);
+export default function ChatWindow({conversation, onSendMessage}) {
 
-    function handleSendMessage(texte) {
-        const nouveauMessage = {
-            id: Date.now(), // un id unique simple, basé sur l'horodatage
-            texte: texte
-        }
-        setMessages([...messages, nouveauMessage])
+    if(!conversation){
+        return (
+            <div className="flex-1 flex items-center justify-center text-gray-400">
+                Sélectionne une conversation
+            </div>
+        )
     }
     return (
         <div className="flex flex-col flex-1 h-screen">
-            <div className="flex-1 overflow-y-auto px-4 py-4">
-                {messages.map(message => (
-                    <div key={message.id} className="mb-2">
-                        {message.texte}
-                    </div>
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-2">
+                {conversation.messages.map((texte, index) => (
+                    <Message key={index} texte={texte} />
                 ))}
             </div>
 
-            <MessageInput onSendMessage={handleSendMessage} />
+            <MessageInput onSendMessage={(texte) => onSendMessage(conversation.id, texte)} />
         </div>
-    )
+    );
 }
